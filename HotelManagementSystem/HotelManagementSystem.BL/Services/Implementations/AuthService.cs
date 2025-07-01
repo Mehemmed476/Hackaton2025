@@ -19,7 +19,7 @@ public class AuthService : IAuthService
     readonly UserManager<AppUser> _userManager;
     readonly SignInManager<AppUser> _signInManager;
     IHttpContextAccessor _httpContextAccessor;
-    public AuthService(IHttpContextAccessor httpContextAccessor, IConfiguration configuration, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+    public AuthService(IAuthService authService, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
     {
         _configuration = configuration;
         _userManager = userManager;
