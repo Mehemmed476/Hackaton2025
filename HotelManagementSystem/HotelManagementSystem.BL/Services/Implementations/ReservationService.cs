@@ -27,6 +27,7 @@ public class ReservationService : IReservationService
     public async Task AddReservationAsync(AddReservationDTO addReservationDTO)
     {
         Reservation reservation = _mapper.Map<Reservation>(addReservationDTO);
+
         AppUser user = await _authService.GetCurrentUserAsync();
 
         if (user is null)

@@ -9,4 +9,5 @@ public interface IAuthService
     public Task RegisterManagerAsync(RegisterDTO registerDTO);
     public Task RegisterUserAsync(RegisterDTO registerDTO);
     public string GenerateToken(AppUser appUser, bool rememberMe);
+    public Task<AppUser> GetCurrentUserAsync();
 }

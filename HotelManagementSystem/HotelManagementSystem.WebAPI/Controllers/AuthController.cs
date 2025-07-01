@@ -19,11 +19,6 @@ namespace HotelManagementSystem.WebAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 string token = await _authService.LoginAsync(loginDTO);
@@ -42,11 +37,6 @@ namespace HotelManagementSystem.WebAPI.Controllers
         [HttpPost("register-manager")]
         public async Task<IActionResult> RegisterManager(RegisterDTO registerDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 await _authService.RegisterManagerAsync(registerDTO);
@@ -64,11 +54,6 @@ namespace HotelManagementSystem.WebAPI.Controllers
         [HttpPost("register-user")]
         public async Task<IActionResult> RegisterUser(RegisterDTO registerDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 await _authService.RegisterUserAsync(registerDTO);

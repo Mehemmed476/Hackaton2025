@@ -71,11 +71,8 @@ public class AuthService : IAuthService
         {
             throw new BaseException();
         }
-        bool result = await _userManager.CheckPasswordAsync(appUser, loginDTO.Password);
-        if (!result)
-        {
-            throw new BaseException("Credentials are not correct.");
-        }
+        await _userManager.CheckPasswordAsync(appUser, loginDTO.Password);
+     
         var roles = await _userManager.GetRolesAsync(appUser);
         var token = GenerateToken(appUser, loginDTO.RememberMe);
         return token;

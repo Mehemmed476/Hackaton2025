@@ -29,14 +29,14 @@ public class CustomerService : ICustomerService
     {
         Customer customer = _mapper.Map<Customer>(addCustomerDTO);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        /*AppUser user = await _authService.GetCurrentUserAsync();
 
         if (user is null)
         {
             throw new BaseException("Please login.");
         }
 
-        customer.CreatedBy = user;
+        customer.CreatedBy = user;*/
         customer.CreatedAt = DateTime.Now;
         await _writeRepository.CreateAsync(customer);
     }
