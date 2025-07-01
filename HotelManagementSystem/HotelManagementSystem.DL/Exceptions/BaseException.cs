@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace HotelManagementSystem.DL.Exceptions;
 
-namespace HotelManagementSystem.DL.Exceptions
+public class BaseException : Exception
 {
-    class BaseException
+    public BaseException() : base("Something went wrong.")
     {
+        
+    }
+    public BaseException(string mes) : base(mes)
+    {
+        
     }
 }
