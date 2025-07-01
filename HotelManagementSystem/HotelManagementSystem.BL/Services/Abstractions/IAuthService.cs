@@ -6,7 +6,8 @@ namespace HotelManagementSystem.BL.Services.Abstractions;
 public interface IAuthService
 {
     public Task<string> LoginAsync(LoginDTO loginDTO);
-    public Task RegisterAsync(RegisterDTO registerDTO);
+    public Task RegisterManagerAsync(RegisterDTO registerDTO);
+    public Task RegisterUserAsync(RegisterDTO registerDTO);
     public string GenerateToken(AppUser appUser, bool rememberMe);
     public Task<AppUser> GetCurrentUserAsync();
 

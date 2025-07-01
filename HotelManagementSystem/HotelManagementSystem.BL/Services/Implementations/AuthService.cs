@@ -1,6 +1,7 @@
 ﻿using HotelManagementSystem.BL.DTOs.AuthDTO;
 using HotelManagementSystem.BL.Services.Abstractions;
 using HotelManagementSystem.Core.Entities.Identity;
+using HotelManagementSystem.Core.Enums;
 using HotelManagementSystem.DL.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -73,7 +74,38 @@ public class AuthService : IAuthService
         return token;
     }
 
-    public async Task RegisterAsync(RegisterDTO registerDTO)
+    public async Task RegisterUserAsync(RegisterDTO registerDTO)
+    {
+        AppUser? appUser = await _userManager.FindByNameAsync(registerDTO.FirstName + registerDTO.LastName);
+
+        if (appUser is not null)
+        {
+            throw new BaseException("this user already exists.");
+        }
+
+        AppUser user = new AppUser
+        {
+            FirstName = registerDTO.FirstName,
+            LastName = registerDTO.LastName,
+            Email = registerDTO.FirstName + registerDTO.LastName + "@gmail.com",
+            UserName = registerDTO.FirstName + registerDTO.LastName,
+        };
+        
+        IdentityResult result = await _userManager.CreateAsync(user);
+        if (!result.Succeeded)
+        {
+            throw new BaseException("Couldn't generate user.");
+        }
+
+        IdentityResult roleResult = await _userManager.AddToRoleAsync(user,RoleEnum.User.ToString());
+        if (!roleResult.Succeeded)
+        {
+            throw new BaseException("Couldn't generate role.");
+        }
+
+    }
+
+    public async Task RegisterManagerAsync(RegisterDTO registerDTO)
     {
         AppUser? appUser = await _userManager.FindByNameAsync(registerDTO.FirstName + registerDTO.LastName);
 
@@ -95,5 +127,12 @@ public class AuthService : IAuthService
         {
             throw new BaseException("Couldn't generate user.");
         }
+
+        IdentityResult roleResult = await _userManager.AddToRoleAsync(user, RoleEnum.Manager.ToString());
+        if (!roleResult.Succeeded)
+        {
+            throw new BaseException("Couldn't generate role.");
+        }
+
     }
 }
