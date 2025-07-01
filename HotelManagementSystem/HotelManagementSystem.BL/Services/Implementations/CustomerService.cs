@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using HotelManagementSystem.BL.Customers.Abstractions;
 using HotelManagementSystem.BL.DTOs.CustomerDTO;
+using HotelManagementSystem.BL.Services.Abstractions;
 using HotelManagementSystem.Core.Entities;
+using HotelManagementSystem.Core.Entities.Identity;
 using HotelManagementSystem.DL.Exceptions;
 using HotelManagementSystem.DL.Repositories.Abstractions;
 using System.Linq.Expressions;
@@ -12,21 +14,31 @@ public class CustomerService : ICustomerService
 {
     readonly ICustomerReadRepository _readRepository;
     readonly ICustomerWriteRepository _writeRepository;
+    readonly IAuthService _authService;
     readonly IMapper _mapper;
 
-    public CustomerService(IMapper mapper, ICustomerReadRepository readRepository, ICustomerWriteRepository writeRepository)
+    public CustomerService(IAuthService authService, IMapper mapper, ICustomerReadRepository readRepository, ICustomerWriteRepository writeRepository)
     {
         _readRepository = readRepository;
         _writeRepository = writeRepository;
         _mapper = mapper;
+        _authService = authService;
     }
 
     public async Task AddCustomerAsync(AddCustomerDTO addCustomerDTO)
     {
         Customer customer = _mapper.Map<Customer>(addCustomerDTO);
-        await _writeRepository.CreateAsync(customer);
-        //WARNING ADD ADDED BY
 
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
+
+        customer.CreatedBy = user;
+        customer.CreatedAt = DateTime.Now;
+        await _writeRepository.CreateAsync(customer);
     }
 
     public async Task<ICollection<GetCustomerDTO>> GetAllCustomers()
@@ -69,6 +81,12 @@ public class CustomerService : ICustomerService
     {
         Customer customer = await _readRepository.GetByIdAsync(Id);
 
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
         if (customer is null)
         {
             throw new BaseException("Couldn't find customer.");
@@ -79,21 +97,27 @@ public class CustomerService : ICustomerService
         }
 
         customer.IsDeleted = false;
-
-        //WARNING ADD DELETED BY
+        customer.DeletedBy = null;
+        customer.DeletedAt = null;
 
         _writeRepository.Update(customer);
     }
 
-    public Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync()
     {
-        throw new NotImplementedException();
+        return await _writeRepository.SaveChangesAsync();
     }
 
     public async Task SoftDelete(Guid Id)
     {
         Customer customer = await _readRepository.GetByIdAsync(Id);
 
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
         if (customer is null)
         {
             throw new BaseException("Couldn't find customer.");
@@ -104,8 +128,8 @@ public class CustomerService : ICustomerService
         }
 
         customer.IsDeleted = true;
-
-        //WARNING ADD DELETED BY
+        customer.DeletedBy = user;
+        customer.DeletedAt = DateTime.Now;
 
         _writeRepository.Update(customer);
     }
@@ -114,6 +138,16 @@ public class CustomerService : ICustomerService
     {
         Customer customer = await _readRepository.GetByIdAsync(Id);
 
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
+        if (customer.IsDeleted)
+        {
+            throw new BaseException("Customer is deleted. Please revert it before updating it.");
+        }
         if (customer is null)
         {
             throw new BaseException("Couldn't find customer.");
@@ -126,8 +160,10 @@ public class CustomerService : ICustomerService
         Customer updatedCustomer = _mapper.Map<Customer>(updateCustomerDTO);
 
         updatedCustomer.Id = Id;
-
-        //WARNING ADD DELETED BY
+        updatedCustomer.CreatedBy = customer.CreatedBy;
+        updatedCustomer.CreatedAt = customer.CreatedAt;
+        updatedCustomer.UpdatedAt = DateTime.Now;
+        updatedCustomer.UpdatedBy = user;
 
         _writeRepository.Update(updatedCustomer);
     }

@@ -2,6 +2,7 @@
 using HotelManagementSystem.BL.DTOs.RoomDTO;
 using HotelManagementSystem.BL.Services.Abstractions;
 using HotelManagementSystem.Core.Entities;
+using HotelManagementSystem.Core.Entities.Identity;
 using HotelManagementSystem.DL.Exceptions;
 using HotelManagementSystem.DL.Repositories.Abstractions;
 using System;
@@ -18,9 +19,11 @@ public class RoomService : IRoomService
     readonly IRoomReadRepository _readRepository;
     readonly IRoomWriteRepository _writeRepository;
     readonly IMapper _mapper;
+    readonly IAuthService _authService;
 
-    public RoomService(IMapper mapper, IRoomReadRepository readRepository, IRoomWriteRepository writeRepository)
+    public RoomService(IAuthService authService, IMapper mapper, IRoomReadRepository readRepository, IRoomWriteRepository writeRepository)
     {
+        _authService = authService;
         _readRepository = readRepository;
         _writeRepository = writeRepository;
         _mapper = mapper;
@@ -29,8 +32,19 @@ public class RoomService : IRoomService
     public async Task AddRoomAsync(AddRoomDTO addRoomDTO)
     {
         Room room = _mapper.Map<Room>(addRoomDTO);
+        
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
+
+        room.CreatedBy = user;
+        room.CreatedAt = DateTime.Now;
+
         await _writeRepository.CreateAsync(room);
-        //WARNING ADD ADDED BY
+        
 
     }
 
@@ -74,6 +88,12 @@ public class RoomService : IRoomService
     {
         Room room = await _readRepository.GetByIdAsync(Id);
 
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
         if (room is null)
         {
             throw new BaseException("Couldn't find room.");
@@ -84,21 +104,27 @@ public class RoomService : IRoomService
         }
 
         room.IsDeleted = false;
-
-        //WARNING ADD DELETED BY
+        room.DeletedBy = null;
+        room.DeletedAt = null;
 
         _writeRepository.Update(room);
     }
 
-    public Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync()
     {
-        throw new NotImplementedException();
+        return await _writeRepository.SaveChangesAsync();
     }
 
     public async Task SoftDelete(Guid Id)
     {
         Room room = await _readRepository.GetByIdAsync(Id);
 
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
         if (room is null)
         {
             throw new BaseException("Couldn't find room.");
@@ -109,8 +135,8 @@ public class RoomService : IRoomService
         }
 
         room.IsDeleted = true;
-
-        //WARNING ADD DELETED BY
+        room.DeletedBy = user;
+        room.DeletedAt = DateTime.Now;
 
         _writeRepository.Update(room);
     }
@@ -119,6 +145,12 @@ public class RoomService : IRoomService
     {
         Room room = await _readRepository.GetByIdAsync(Id);
 
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
         if (room is null)
         {
             throw new BaseException("Couldn't find room.");
@@ -131,8 +163,10 @@ public class RoomService : IRoomService
         Room updatedRoom = _mapper.Map<Room>(updateRoomDTO);
 
         updatedRoom.Id = Id;
-
-        //WARNING ADD DELETED BY
+        updatedRoom.CreatedBy = room.CreatedBy;
+        updatedRoom.CreatedAt = room.CreatedAt;
+        updatedRoom.UpdatedAt = DateTime.Now;
+        updatedRoom.UpdatedBy = user;
 
         _writeRepository.Update(updatedRoom);
     }

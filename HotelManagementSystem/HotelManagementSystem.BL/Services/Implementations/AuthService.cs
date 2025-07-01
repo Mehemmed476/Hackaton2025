@@ -2,6 +2,7 @@
 using HotelManagementSystem.BL.Services.Abstractions;
 using HotelManagementSystem.Core.Entities.Identity;
 using HotelManagementSystem.DL.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -16,11 +17,19 @@ public class AuthService : IAuthService
     readonly IConfiguration _configuration;
     readonly UserManager<AppUser> _userManager;
     readonly SignInManager<AppUser> _signInManager;
-    public AuthService(IConfiguration configuration, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+    IHttpContextAccessor _httpContextAccessor;
+    public AuthService(IHttpContextAccessor httpContextAccessor, IConfiguration configuration, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
     {
         _configuration = configuration;
         _userManager = userManager;
         _signInManager = signInManager;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    public async Task<AppUser> GetCurrentUserAsync()
+    {
+        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+        return user;
     }
     public string GenerateToken(AppUser user, bool rememberMe)
     {

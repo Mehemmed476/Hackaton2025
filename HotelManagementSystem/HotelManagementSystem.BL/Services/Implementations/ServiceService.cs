@@ -15,20 +15,31 @@ public class ServiceService : IServiceService
     readonly IServiceReadRepository _readRepository;
     readonly IServiceWriteRepository _writeRepository;
     readonly IMapper _mapper;
+    readonly IAuthService _authService;
 
-    public ServiceService(IMapper mapper, IServiceReadRepository readRepository, IServiceWriteRepository writeRepository)
+    public ServiceService(IAuthService authService, IMapper mapper, IServiceReadRepository readRepository, IServiceWriteRepository writeRepository)
     {
         _readRepository = readRepository;
         _writeRepository = writeRepository;
         _mapper = mapper;
+        _authService = authService;
     }
 
     public async Task AddServiceAsync(AddServiceDTO addServiceDTO)
     {
         Service service = _mapper.Map<Service>(addServiceDTO);
-        await _writeRepository.CreateAsync(service);
-        //WARNING ADD ADDED BY
 
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
+
+        service.CreatedBy = user;
+        service.CreatedAt = DateTime.Now;
+
+        await _writeRepository.CreateAsync(service);
     }
 
     public async Task<ICollection<GetServiceDTO>> GetAllServices()
@@ -71,6 +82,12 @@ public class ServiceService : IServiceService
     {
         Service service = await _readRepository.GetByIdAsync(Id);
 
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
         if (service is null)
         {
             throw new BaseException("Couldn't find service.");
@@ -81,21 +98,27 @@ public class ServiceService : IServiceService
         }
 
         service.IsDeleted = false;
-
-        //WARNING ADD DELETED BY
+        service.DeletedBy = null;
+        service.DeletedAt = null;
 
         _writeRepository.Update(service);
     }
 
-    public Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync()
     {
-        throw new NotImplementedException();
+        return await _writeRepository.SaveChangesAsync();
     }
 
     public async Task SoftDelete(Guid Id)
     {
         Service service = await _readRepository.GetByIdAsync(Id);
 
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
         if (service is null)
         {
             throw new BaseException("Couldn't find service.");
@@ -106,8 +129,8 @@ public class ServiceService : IServiceService
         }
 
         service.IsDeleted = true;
-
-        //WARNING ADD DELETED BY
+        service.DeletedBy = user;
+        service.DeletedAt = DateTime.Now;
 
         _writeRepository.Update(service);
     }
@@ -116,6 +139,12 @@ public class ServiceService : IServiceService
     {
         Service service = await _readRepository.GetByIdAsync(Id);
 
+        AppUser user = await _authService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            throw new BaseException("Please login.");
+        }
         if (service is null)
         {
             throw new BaseException("Couldn't find service.");
@@ -128,8 +157,10 @@ public class ServiceService : IServiceService
         Service updatedService = _mapper.Map<Service>(updateServiceDTO);
 
         updatedService.Id = Id;
-
-        //WARNING ADD DELETED BY
+        updatedService.CreatedBy = service.CreatedBy;
+        updatedService.CreatedAt = service.CreatedAt;
+        updatedService.UpdatedAt = DateTime.Now;
+        updatedService.UpdatedBy = user;
 
         _writeRepository.Update(updatedService);
     }
