@@ -27,17 +27,17 @@ public class AppDbContext : IdentityDbContext<AppUser, IdentityRole, string>
 
 
 
-        IdentityUser admin = new()
+        AppUser admin = new()
         {
             Id = "c10c9801-9957-4018-8e48-0c7812d47b50",
             UserName = "admin",
-            NormalizedUserName = "ADMIN"
+            NormalizedUserName = "ADMIN",
         };
 
-        PasswordHasher<IdentityUser> hasher = new();
+        PasswordHasher<AppUser> hasher = new();
         admin.PasswordHash = hasher.HashPassword(admin, "admin123!@");
 
-        builder.Entity<IdentityUser>().HasData(admin);
+        builder.Entity<AppUser>().HasData(admin);
 
         builder.Entity<IdentityUserRole<string>>().HasData(
             new IdentityUserRole<string> { UserId = admin.Id, RoleId = "6d16558a-ba79-4fb5-9717-bd333cfc2b0d" }

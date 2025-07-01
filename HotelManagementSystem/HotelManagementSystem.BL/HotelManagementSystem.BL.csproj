@@ -17,9 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="NewFolder\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="ExternalServices\Abstractions\" />
+    <Folder Include="ExternalServices\Implementations\" />
+    <Folder Include="Validators\" />
     <Folder Include="Profiles\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
