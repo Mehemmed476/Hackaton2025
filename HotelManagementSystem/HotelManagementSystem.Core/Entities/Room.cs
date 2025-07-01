@@ -14,6 +14,7 @@ public class Room : AuditableEntity
     public RoomTypeEnum RoomType { get; set; }
     public decimal PricePerNight { get; set; }
     public RoomStatusEnum RoomStatus { get; set; }
+    public string RoomImageURL { get; set; }
 
     public ICollection<Reservation>? Reservations { get; set; } = new List<Reservation>();
 }

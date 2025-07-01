@@ -171,18 +171,18 @@ namespace HotelManagementSystem.DL.Migrations
                             Id = "c10c9801-9957-4018-8e48-0c7812d47b50",
                             AccessFailedCount = 0,
                             CVImageURL = "",
-                            ConcurrencyStamp = "4b6f64bc-d92a-4534-9c77-174cb5cb5c1e",
+                            ConcurrencyStamp = "5ef4a5ce-eabd-4346-a3e1-3ed552c63fb6",
                             EmailConfirmed = false,
                             FirstName = "",
                             IdentityCardImageURL = "",
                             LastName = "",
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHZNa0r8E9XyeXqiCGIPsg1e8ActxbqysL18mo4Ty3a4AAVDvCyWjvHZxgUCgIwq6A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGGEdRjv5QrDgUfHZToPm2gHYMCSSsrLrayHQrgaHMjKhorM3J5uIKz9mbQu1rck4A==",
                             PersonalImageURL = "",
                             PhoneNumber = "",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "95611cd8-4f06-423e-ac12-699bb2590fd8",
+                            SecurityStamp = "046b9cda-9f9e-44f5-94ad-29ccc4cbce3d",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -270,6 +270,10 @@ namespace HotelManagementSystem.DL.Migrations
 
                     b.Property<decimal>("PricePerNight")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("RoomImageURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
@@ -397,6 +401,12 @@ namespace HotelManagementSystem.DL.Migrations
                             Id = "287f30c4-6d0f-4687-b117-49d810376603",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
+                        },
+                        new
+                        {
+                            Id = "1f9c48c3-55a9-4a41-aa76-4a440631c7ab",
+                            Name = "User",
+                            NormalizedName = "USER"
                         });
                 });
 

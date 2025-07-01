@@ -2,6 +2,8 @@
 using FluentValidation.AspNetCore;
 using HotelManagementSystem.BL.Customers.Abstractions;
 using HotelManagementSystem.BL.Customers.Implementations;
+using HotelManagementSystem.BL.ExternalServices.Abstractions;
+using HotelManagementSystem.BL.ExternalServices.Implementations;
 using HotelManagementSystem.BL.Profiles;
 using HotelManagementSystem.BL.Services.Abstractions;
 using HotelManagementSystem.BL.Services.Implementations;
@@ -50,5 +52,8 @@ public static class BLRegistrations
         service.AddScoped<IReservationService, ReservationService>();
         service.AddScoped<IRoomService, RoomService>();
         service.AddScoped<IServiceService, ServiceService>();
+        service.AddScoped<IAuthService, AuthService>();
+
+        service.AddScoped<IFileUploadService, FileUploadService>();
     }
 }

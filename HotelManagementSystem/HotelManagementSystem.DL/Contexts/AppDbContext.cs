@@ -22,7 +22,8 @@ public class AppDbContext : IdentityDbContext<AppUser, IdentityRole, string>
 
         builder.Entity<IdentityRole>().HasData(
             new IdentityRole { Id = "6d16558a-ba79-4fb5-9717-bd333cfc2b0d", Name = "Admin", NormalizedName = "ADMIN" },
-            new IdentityRole { Id = "287f30c4-6d0f-4687-b117-49d810376603", Name = "Manager", NormalizedName = "MANAGER" }
+            new IdentityRole { Id = "287f30c4-6d0f-4687-b117-49d810376603", Name = "Manager", NormalizedName = "MANAGER" },
+            new IdentityRole { Id = "1f9c48c3-55a9-4a41-aa76-4a440631c7ab", Name = "User", NormalizedName = "USER" }
         );
 
 
