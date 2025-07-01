@@ -20,8 +20,6 @@
     <Folder Include="DTOs\" />
     <Folder Include="ExternalServices\Abstractions\" />
     <Folder Include="ExternalServices\Implementations\" />
-    <Folder Include="Services\Abstractions\" />
-    <Folder Include="Services\Implementations\" />
     <Folder Include="Validators\" />
     <Folder Include="Profiles\" />
   </ItemGroup>
