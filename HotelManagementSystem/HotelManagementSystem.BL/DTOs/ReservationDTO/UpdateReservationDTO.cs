@@ -1,6 +1,6 @@
 ﻿namespace HotelManagementSystem.BL.DTOs.ReservationDTO;
 
-public class UpdateResevationDTO
+public class UpdateReservationDTO
 {
     public Guid CustomerId { get; set; }
     public Guid RoomId { get; set; }

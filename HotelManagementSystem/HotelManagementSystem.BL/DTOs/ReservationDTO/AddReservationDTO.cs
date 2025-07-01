@@ -1,6 +1,6 @@
 ﻿namespace HotelManagementSystem.BL.DTOs.ReservationDTO;
 
-public class AddResevationDTO
+public class AddReservationDTO
 {
     public Guid CustomerId { get; set; }
     public Guid RoomId { get; set; }

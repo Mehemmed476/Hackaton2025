@@ -1,6 +1,10 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using HotelManagementSystem.BL.Customers.Abstractions;
+using HotelManagementSystem.BL.Customers.Implementations;
 using HotelManagementSystem.BL.Profiles;
+using HotelManagementSystem.BL.Services.Abstractions;
+using HotelManagementSystem.BL.Services.Implementations;
 using HotelManagementSystem.Core.Entities.Identity;
 using HotelManagementSystem.DL.Contexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -41,5 +45,10 @@ public static class BLRegistrations
         service.AddAutoMapper(typeof(RoomProfile).Assembly);
         service.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         service.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+
+        service.AddScoped<ICustomerService, CustomerService>();
+        service.AddScoped<IReservationService, ReservationService>();
+        service.AddScoped<IRoomService, RoomService>();
+        service.AddScoped<IServiceService, ServiceService>();
     }
 }

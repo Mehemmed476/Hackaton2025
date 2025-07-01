@@ -2,7 +2,7 @@
 
 namespace HotelManagementSystem.BL.DTOs.ReservationDTO;
 
-public class GetResevationDTO
+public class GetReservationDTO
 {
     public Guid Id { get; set; }
     public bool IsDeleted { get; set; }

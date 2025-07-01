@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HotelManagementSystem.BL.Customers.Abstractions;
 using HotelManagementSystem.BL.DTOs.CustomerDTO;
 using HotelManagementSystem.Core.Entities;
 using HotelManagementSystem.DL.Exceptions;
@@ -7,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace HotelManagementSystem.BL.Customers.Implementations;
 
-public class CustomerService
+public class CustomerService : ICustomerService
 {
     readonly ICustomerReadRepository _readRepository;
     readonly ICustomerWriteRepository _writeRepository;

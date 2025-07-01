@@ -21,7 +21,6 @@
     <Folder Include="ExternalServices\Abstractions\" />
     <Folder Include="ExternalServices\Implementations\" />
     <Folder Include="Validators\" />
-    <Folder Include="Profiles\" />
   </ItemGroup>
 
 </Project>
