@@ -1,8 +1,11 @@
 ﻿using HotelManagementSystem.BL.DTOs.AuthDTO;
+using HotelManagementSystem.BL.DTOs.RoomDTO;
+using HotelManagementSystem.BL.ExternalServices.Abstractions;
 using HotelManagementSystem.BL.Services.Abstractions;
 using HotelManagementSystem.Core.Entities.Identity;
 using HotelManagementSystem.Core.Enums;
 using HotelManagementSystem.DL.Exceptions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -19,12 +22,16 @@ public class AuthService : IAuthService
     readonly UserManager<AppUser> _userManager;
     readonly SignInManager<AppUser> _signInManager;
     IHttpContextAccessor _httpContextAccessor;
-    public AuthService(IAuthService authService, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+    IFileUploadService _fileUploadService;
+    IWebHostEnvironment _env;
+    public AuthService(IHttpContextAccessor httpContextAccessor, IConfiguration configuration, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IFileUploadService fileUploadService, IWebHostEnvironment env)
     {
         _configuration = configuration;
         _userManager = userManager;
         _signInManager = signInManager;
         _httpContextAccessor = httpContextAccessor;
+        _fileUploadService = fileUploadService;
+        _env = env;
     }
 
     public async Task<AppUser> GetCurrentUserAsync()
@@ -91,7 +98,7 @@ public class AuthService : IAuthService
             UserName = registerDTO.FirstName + registerDTO.LastName,
         };
         
-        IdentityResult result = await _userManager.CreateAsync(user, registerDTO.Password);
+        IdentityResult result = await _userManager.CreateAsync(user);
         if (!result.Succeeded)
         {
             throw new BaseException("Couldn't generate user.");
@@ -120,9 +127,12 @@ public class AuthService : IAuthService
             LastName = registerDTO.LastName,
             Email = registerDTO.FirstName + registerDTO.LastName + "@gmail.com",
             UserName = registerDTO.FirstName + registerDTO.LastName,
+            CVImageURL = await _fileUploadService.SaveFileAsync(registerDTO.CVImage, _env.WebRootPath, new[] { ".jpg", ".jpeg", ".webp", ".png" }),
+            IdentityCardImageURL = await _fileUploadService.SaveFileAsync(registerDTO.IdentityCardImage, _env.WebRootPath, new[] { ".jpg", ".jpeg", ".webp", ".png" }),
+            PersonalImageURL = await _fileUploadService.SaveFileAsync(registerDTO.PersonalImage, _env.WebRootPath, new[] { ".jpg", ".jpeg", ".webp", ".png" })
         };
 
-        IdentityResult result = await _userManager.CreateAsync(user, registerDTO.Password);
+        IdentityResult result = await _userManager.CreateAsync(user);
         if (!result.Succeeded)
         {
             throw new BaseException("Couldn't generate user.");

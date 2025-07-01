@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using HotelManagementSystem.BL.DTOs.RoomDTO;
+using HotelManagementSystem.BL.ExternalServices.Abstractions;
 using HotelManagementSystem.BL.Services.Abstractions;
 using HotelManagementSystem.Core.Entities;
 using HotelManagementSystem.Core.Entities.Identity;
 using HotelManagementSystem.DL.Exceptions;
 using HotelManagementSystem.DL.Repositories.Abstractions;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +22,17 @@ public class RoomService : IRoomService
     readonly IRoomWriteRepository _writeRepository;
     readonly IMapper _mapper;
     readonly IAuthService _authService;
+    readonly IFileUploadService _fileUploadService;
+    IWebHostEnvironment _env;
 
-    public RoomService(IAuthService authService, IMapper mapper, IRoomReadRepository readRepository, IRoomWriteRepository writeRepository)
+    public RoomService(IAuthService authService, IMapper mapper, IRoomReadRepository readRepository, IRoomWriteRepository writeRepository, IFileUploadService fileUploadService, IWebHostEnvironment env)
     {
         _authService = authService;
         _readRepository = readRepository;
         _writeRepository = writeRepository;
         _mapper = mapper;
+        _fileUploadService = fileUploadService;
+        _env = env;
     }
 
     public async Task AddRoomAsync(AddRoomDTO addRoomDTO)
@@ -42,6 +48,7 @@ public class RoomService : IRoomService
 
         room.CreatedBy = user;
         room.CreatedAt = DateTime.Now;
+        room.RoomImageURL = await _fileUploadService.SaveFileAsync(addRoomDTO.Image, _env.WebRootPath, new[] { ".jpg", ".jpeg", ".webp", ".png" });
 
         await _writeRepository.CreateAsync(room);
         
@@ -62,7 +69,7 @@ public class RoomService : IRoomService
 
     public async Task<GetRoomDTO> GetRoomById(Guid Id)
     {
-        Room room = await _readRepository.GetByIdAsync(Id);
+        Room room = await _readRepository.GetByIdAsync(Id, false, "Reservations");
 
         if (room is null)
         {
@@ -167,6 +174,7 @@ public class RoomService : IRoomService
         updatedRoom.CreatedAt = room.CreatedAt;
         updatedRoom.UpdatedAt = DateTime.Now;
         updatedRoom.UpdatedBy = user;
+        updatedRoom.RoomImageURL = await _fileUploadService.SaveFileAsync(updateRoomDTO.Image, _env.WebRootPath, new[] { ".jpg", ".jpeg", ".webp", ".png" });
 
         _writeRepository.Update(updatedRoom);
     }

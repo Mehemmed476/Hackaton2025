@@ -55,7 +55,7 @@ public class ReservationService : IReservationService
 
     public async Task<GetReservationDTO> GetReservationById(Guid Id)
     {
-        Reservation reservation = await _readRepository.GetByIdAsync(Id);
+        Reservation reservation = await _readRepository.GetByIdAsync(Id, false, "Services", "Room", "Customer");
 
         if (reservation is null)
         {

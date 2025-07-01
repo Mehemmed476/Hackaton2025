@@ -55,8 +55,8 @@ public class CustomerService : ICustomerService
 
     public async Task<GetCustomerDTO> GetCustomerById(Guid Id)
     {
-        Customer customer = await _readRepository.GetByIdAsync(Id);
-
+        Customer customer = await _readRepository.GetByIdAsync(Id, false ,"Reservations");
+         
         if (customer is null)
         {
             throw new BaseException("Couldn't find customer.");

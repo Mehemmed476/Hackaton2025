@@ -56,7 +56,8 @@ public class ServiceService : IServiceService
 
     public async Task<GetServiceDTO> GetServiceById(Guid Id)
     {
-        Service service = await _readRepository.GetByIdAsync(Id);
+        Service service = await _readRepository.GetByIdAsync(Id, false, "Reservation");
+
 
         if (service is null)
         {
