@@ -2,6 +2,7 @@ namespace HotelManagementSystem.Core.Enums;
 
 public enum RoomStatusEnum
 {
-    vacant = 1,
-    occupied = 2,
+  Available,
+  UnderMaintenance,
+  Occupied
 }

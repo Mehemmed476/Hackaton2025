@@ -1,0 +1,11 @@
+﻿using HotelManagementSystem.BL.DTOs.AuthDTO;
+using HotelManagementSystem.Core.Entities.Identity;
+
+namespace HotelManagementSystem.BL.Services.Abstractions;
+
+public interface IAuthService
+{
+    public Task<string> LoginAsync(LoginDTO loginDTO);
+    public Task RegisterAsync(RegisterDTO registerDTO);
+    public string GenerateToken(AppUser appUser, bool rememberMe);
+}
