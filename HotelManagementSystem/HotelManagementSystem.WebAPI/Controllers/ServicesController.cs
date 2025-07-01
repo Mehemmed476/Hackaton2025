@@ -1,5 +1,5 @@
-﻿using HotelManagementSystem.BL.Customers.Abstractions;
-using HotelManagementSystem.BL.DTOs.CustomerDTO;
+﻿using HotelManagementSystem.BL.DTOs.ServiceDTO;
+using HotelManagementSystem.BL.Services.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,21 +7,21 @@ namespace HotelManagementSystem.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CustomersController : ControllerBase
+public class ServicesController : ControllerBase
 {
-    private readonly ICustomerService _customerService;
+    private readonly IServiceService _serviceService;
 
-    public CustomersController(ICustomerService customerService)
+    public ServicesController(IServiceService serviceService)
     {
-        _customerService = customerService;
+        _serviceService = serviceService;
     }
 
-    [HttpGet("GetAllCustomers")]
-    public async Task<IActionResult> GetAllCustomers()
+    [HttpGet("GetAllServices")]
+    public async Task<IActionResult> GetAllServices()
     {
         try
         {
-            return StatusCode(StatusCodes.Status200OK, await _customerService.GetAllCustomers());
+            return StatusCode(StatusCodes.Status200OK, await _serviceService.GetAllServices());
         }
         catch (Exception ex)
         {
@@ -29,12 +29,12 @@ public class CustomersController : ControllerBase
         }
     }
 
-    [HttpGet("GetCustomerById/{id}")]
-    public async Task<IActionResult> GetCustomerById(Guid id)
+    [HttpGet("GetServiceById/{id}")]
+    public async Task<IActionResult> GetServiceById(Guid id)
     {
         try
         {
-            return StatusCode(StatusCodes.Status200OK, await _customerService.GetCustomerById(id));
+            return StatusCode(StatusCodes.Status200OK, await _serviceService.GetServiceById(id));
         }
         catch (Exception ex)
         {
@@ -42,8 +42,8 @@ public class CustomersController : ControllerBase
         }
     }
 
-    [HttpPost("AddCustomer")]
-    public async Task<IActionResult> AddCustomer(AddCustomerDTO customerPostDto)
+    [HttpPost("AddService")]
+    public async Task<IActionResult> AddService(AddServiceDTO servicePostDto)
     {
         if (!ModelState.IsValid)
         {
@@ -52,8 +52,8 @@ public class CustomersController : ControllerBase
 
         try
         {
-            await _customerService.AddCustomerAsync(customerPostDto);
-            await _customerService.SaveChangesAsync();
+            await _serviceService.AddServiceAsync(servicePostDto);
+            await _serviceService.SaveChangesAsync();
             return StatusCode(StatusCodes.Status201Created);
         }
         catch (Exception ex)
@@ -62,8 +62,8 @@ public class CustomersController : ControllerBase
         }
     }
 
-    [HttpPut("UpdateCustomer")]
-    public async Task<IActionResult> UpdateCustomer(Guid id, UpdateCustomerDTO customerPutDto)
+    [HttpPut("UpdateService")]
+    public async Task<IActionResult> UpdateService(Guid id, UpdateServiceDTO servicePutDto)
     {
         if (!ModelState.IsValid)
         {
@@ -72,8 +72,8 @@ public class CustomersController : ControllerBase
 
         try
         {
-            await _customerService.Update(id, customerPutDto);
-            await _customerService.SaveChangesAsync();
+            await _serviceService.Update(id, servicePutDto);
+            await _serviceService.SaveChangesAsync();
             return StatusCode(StatusCodes.Status201Created);
         }
         catch (Exception ex)
@@ -82,13 +82,13 @@ public class CustomersController : ControllerBase
         }
     }
 
-    [HttpPut("SoftDeleteCustomer/{id}")]
-    public async Task<IActionResult> SoftDeleteCustomer(Guid id)
+    [HttpPut("SoftDeleteService/{id}")]
+    public async Task<IActionResult> SoftDeleteService(Guid id)
     {
         try
         {
-            await _customerService.SoftDelete(id);
-            await _customerService.SaveChangesAsync();
+            await _serviceService.SoftDelete(id);
+            await _serviceService.SaveChangesAsync();
             return StatusCode(StatusCodes.Status201Created);
         }
         catch (Exception ex)
@@ -97,13 +97,13 @@ public class CustomersController : ControllerBase
         }
     }
 
-    [HttpPut("RestoreCustomer/{id}")]
-    public async Task<IActionResult> RestoreCustomer(Guid id)
+    [HttpPut("RestoreService/{id}")]
+    public async Task<IActionResult> RestoreService(Guid id)
     {
         try
         {
-            await _customerService.RevertSoftDelete(id);
-            await _customerService.SaveChangesAsync();
+            await _serviceService.RevertSoftDelete(id);
+            await _serviceService.SaveChangesAsync();
             return StatusCode(StatusCodes.Status201Created);
         }
         catch (Exception ex)
@@ -112,13 +112,13 @@ public class CustomersController : ControllerBase
         }
     }
 
-    [HttpDelete("DeleteCustomer/{id}")]
-    public async Task<IActionResult> DeleteCustomer(Guid id)
+    [HttpDelete("DeleteService/{id}")]
+    public async Task<IActionResult> DeleteService(Guid id)
     {
         try
         {
-            await _customerService.HardDelete(id);
-            await _customerService.SaveChangesAsync();
+            await _serviceService.HardDelete(id);
+            await _serviceService.SaveChangesAsync();
             return StatusCode(StatusCodes.Status201Created);
         }
         catch (Exception ex)
@@ -126,5 +126,4 @@ public class CustomersController : ControllerBase
             return StatusCode(StatusCodes.Status404NotFound, ex.Message);
         }
     }
-
 }
