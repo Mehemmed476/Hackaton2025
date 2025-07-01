@@ -1,5 +1,90 @@
-﻿namespace HotelManagementSystem.BL.Services.Implementations;
+﻿using HotelManagementSystem.BL.DTOs.AuthDTO;
+using HotelManagementSystem.BL.Services.Abstractions;
+using HotelManagementSystem.Core.Entities.Identity;
+using HotelManagementSystem.DL.Exceptions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
-public class AuthService
+namespace HotelManagementSystem.BL.Services.Implementations;
+
+public class AuthService : IAuthService
 {
+    readonly IConfiguration _configuration;
+    readonly UserManager<AppUser> _userManager;
+    readonly SignInManager<AppUser> _signInManager;
+    public AuthService(IConfiguration configuration, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+    {
+        _configuration = configuration;
+        _userManager = userManager;
+        _signInManager = signInManager;
+    }
+    public string GenerateToken(AppUser user, bool rememberMe)
+    {
+        var claims = new List<Claim>
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName)
+                };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var expires = rememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddHours(1);
+
+        var token = new JwtSecurityToken(
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
+            claims: claims,
+            expires: expires,
+            signingCredentials: creds);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public async Task<string> LoginAsync(LoginDTO loginDTO)
+    {
+        AppUser? appUser = await _userManager.FindByEmailAsync(loginDTO.Email);
+
+        if (appUser is null)
+        {
+            throw new BaseException();
+        }
+        bool result = await _userManager.CheckPasswordAsync(appUser, loginDTO.Password);
+        if (!result)
+        {
+            throw new BaseException("Credentials are not correct.");
+        }
+        var roles = await _userManager.GetRolesAsync(appUser);
+        var token = GenerateToken(appUser, loginDTO.RememberMe);
+        return token;
+    }
+
+    public async Task RegisterAsync(RegisterDTO registerDTO)
+    {
+        AppUser? appUser = await _userManager.FindByNameAsync(registerDTO.FirstName + registerDTO.LastName);
+
+        if (appUser is not null)
+        {
+            throw new BaseException("this user already exists.");
+        }
+
+        AppUser user = new AppUser
+        {
+            FirstName = registerDTO.FirstName,
+            LastName = registerDTO.LastName,
+            Email = registerDTO.FirstName + registerDTO.LastName + "@gmail.com",
+            UserName = registerDTO.FirstName + registerDTO.LastName,
+        };
+
+        IdentityResult result = await _userManager.CreateAsync(user);
+        if (!result.Succeeded)
+        {
+            throw new BaseException("Couldn't generate user.");
+        }
+    }
 }
