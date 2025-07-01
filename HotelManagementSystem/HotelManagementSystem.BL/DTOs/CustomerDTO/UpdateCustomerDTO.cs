@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace HotelManagementSystem.BL.DTOs.CustomerDTO;
 
-namespace HotelManagementSystem.BL.DTOs.CustomerDTO
+public class UpdateCustomerDTO
 {
-    internal class UpdateCustomerDTO
-    {
-    }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string PhoneNumber { get; set; }
 }

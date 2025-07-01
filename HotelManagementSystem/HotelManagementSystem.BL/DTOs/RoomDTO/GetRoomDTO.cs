@@ -2,7 +2,7 @@ using HotelManagementSystem.Core.Entities;
 using HotelManagementSystem.Core.Entities.Identity;
 using HotelManagementSystem.Core.Enums;
 
-namespace HotelManagementSystem.BL.DTOs.Room;
+namespace HotelManagementSystem.BL.DTOs.RoomDTO;
 
 public class GetRoomDTO
 {

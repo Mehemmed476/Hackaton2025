@@ -1,6 +1,6 @@
 ﻿using HotelManagementSystem.Core.Entities.Identity;
 
-namespace HotelManagementSystem.BL.DTOs.Reservation;
+namespace HotelManagementSystem.BL.DTOs.ReservationDTO;
 
 public class GetResevationDTO
 {

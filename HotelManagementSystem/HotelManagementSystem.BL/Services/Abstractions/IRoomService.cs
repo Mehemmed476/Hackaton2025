@@ -1,4 +1,4 @@
-﻿using HotelManagementSystem.BL.DTOs.Room;
+﻿using HotelManagementSystem.BL.DTOs.RoomDTO;
 using HotelManagementSystem.Core.Entities;
 using System;
 using System.Collections.Generic;
