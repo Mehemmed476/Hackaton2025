@@ -91,7 +91,7 @@ public class AuthService : IAuthService
             UserName = registerDTO.FirstName + registerDTO.LastName,
         };
         
-        IdentityResult result = await _userManager.CreateAsync(user);
+        IdentityResult result = await _userManager.CreateAsync(user, registerDTO.Password);
         if (!result.Succeeded)
         {
             throw new BaseException("Couldn't generate user.");
@@ -122,7 +122,7 @@ public class AuthService : IAuthService
             UserName = registerDTO.FirstName + registerDTO.LastName,
         };
 
-        IdentityResult result = await _userManager.CreateAsync(user);
+        IdentityResult result = await _userManager.CreateAsync(user, registerDTO.Password);
         if (!result.Succeeded)
         {
             throw new BaseException("Couldn't generate user.");
