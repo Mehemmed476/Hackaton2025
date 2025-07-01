@@ -9,10 +9,10 @@ namespace HotelManagementSystem.Core.Entities.Identity;
 
 public class AppUser : IdentityUser
 {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string PhoneNumber { get; set; }
-    public string PersonalImageURL { get; set; }
-    public string CVImageURL { get; set; }
-    public string IdentityCardImageURL { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string PhoneNumber { get; set; } = string.Empty;
+    public string PersonalImageURL { get; set; } = string.Empty;
+    public string CVImageURL { get; set; } = string.Empty;
+    public string IdentityCardImageURL { get; set; } = string.Empty;
 }
