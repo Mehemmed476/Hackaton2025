@@ -28,14 +28,14 @@ public class ReservationService : IReservationService
     {
         Reservation reservation = _mapper.Map<Reservation>(addReservationDTO);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
 
-        reservation.CreatedBy = user;
+        //reservation.CreatedBy = user;
         reservation.CreatedAt = DateTime.Now;
 
         await _writeRepository.CreateAsync(reservation);
@@ -82,12 +82,12 @@ public class ReservationService : IReservationService
     {
         Reservation reservation = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (reservation is null)
         {
             throw new BaseException("Couldn't find reservation.");
@@ -113,12 +113,12 @@ public class ReservationService : IReservationService
     {
         Reservation reservation = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (reservation is null)
         {
             throw new BaseException("Couldn't find reservation.");
@@ -129,7 +129,7 @@ public class ReservationService : IReservationService
         }
 
         reservation.IsDeleted = true;
-        reservation.DeletedBy = user;
+        //reservation.DeletedBy = user;
         reservation.DeletedAt = DateTime.Now;
 
         _writeRepository.Update(reservation);
@@ -139,12 +139,12 @@ public class ReservationService : IReservationService
     {
         Reservation reservation = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (reservation is null)
         {
             throw new BaseException("Couldn't find reservation.");
@@ -157,10 +157,10 @@ public class ReservationService : IReservationService
         Reservation updatedReservation = _mapper.Map<Reservation>(updateReservationDTO);
 
         updatedReservation.Id = Id;
-        updatedReservation.CreatedBy = reservation.CreatedBy;
+        //updatedReservation.CreatedBy = reservation.CreatedBy;
         updatedReservation.CreatedAt = reservation.CreatedAt;
         updatedReservation.UpdatedAt = DateTime.Now;
-        updatedReservation.UpdatedBy = user;
+        //updatedReservation.UpdatedBy = user;
 
         _writeRepository.Update(updatedReservation);
     }

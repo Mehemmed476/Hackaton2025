@@ -81,12 +81,12 @@ public class CustomerService : ICustomerService
     {
         Customer customer = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (customer is null)
         {
             throw new BaseException("Couldn't find customer.");
@@ -112,12 +112,12 @@ public class CustomerService : ICustomerService
     {
         Customer customer = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (customer is null)
         {
             throw new BaseException("Couldn't find customer.");
@@ -128,7 +128,7 @@ public class CustomerService : ICustomerService
         }
 
         customer.IsDeleted = true;
-        customer.DeletedBy = user;
+        //customer.DeletedBy = user;
         customer.DeletedAt = DateTime.Now;
 
         _writeRepository.Update(customer);
@@ -138,12 +138,12 @@ public class CustomerService : ICustomerService
     {
         Customer customer = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (customer.IsDeleted)
         {
             throw new BaseException("Customer is deleted. Please revert it before updating it.");
@@ -160,10 +160,10 @@ public class CustomerService : ICustomerService
         Customer updatedCustomer = _mapper.Map<Customer>(updateCustomerDTO);
 
         updatedCustomer.Id = Id;
-        updatedCustomer.CreatedBy = customer.CreatedBy;
+        //updatedCustomer.CreatedBy = customer.CreatedBy;
         updatedCustomer.CreatedAt = customer.CreatedAt;
         updatedCustomer.UpdatedAt = DateTime.Now;
-        updatedCustomer.UpdatedBy = user;
+        //updatedCustomer.UpdatedBy = user;
 
         _writeRepository.Update(updatedCustomer);
     }

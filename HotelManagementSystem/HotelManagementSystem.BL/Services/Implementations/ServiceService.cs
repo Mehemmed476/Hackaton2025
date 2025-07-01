@@ -29,14 +29,14 @@ public class ServiceService : IServiceService
     {
         Service service = _mapper.Map<Service>(addServiceDTO);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
 
-        service.CreatedBy = user;
+        //service.CreatedBy = user;
         service.CreatedAt = DateTime.Now;
 
         await _writeRepository.CreateAsync(service);
@@ -83,12 +83,12 @@ public class ServiceService : IServiceService
     {
         Service service = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (service is null)
         {
             throw new BaseException("Couldn't find service.");
@@ -114,12 +114,12 @@ public class ServiceService : IServiceService
     {
         Service service = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (service is null)
         {
             throw new BaseException("Couldn't find service.");
@@ -130,7 +130,7 @@ public class ServiceService : IServiceService
         }
 
         service.IsDeleted = true;
-        service.DeletedBy = user;
+        //service.DeletedBy = user;
         service.DeletedAt = DateTime.Now;
 
         _writeRepository.Update(service);
@@ -140,12 +140,12 @@ public class ServiceService : IServiceService
     {
         Service service = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (service is null)
         {
             throw new BaseException("Couldn't find service.");
@@ -158,10 +158,10 @@ public class ServiceService : IServiceService
         Service updatedService = _mapper.Map<Service>(updateServiceDTO);
 
         updatedService.Id = Id;
-        updatedService.CreatedBy = service.CreatedBy;
+        //updatedService.CreatedBy = service.CreatedBy;
         updatedService.CreatedAt = service.CreatedAt;
         updatedService.UpdatedAt = DateTime.Now;
-        updatedService.UpdatedBy = user;
+        //updatedService.UpdatedBy = user;
 
         _writeRepository.Update(updatedService);
     }

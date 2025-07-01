@@ -23,6 +23,16 @@ public static class BLRegistrations
 {
     public static void AddBlServices(this IServiceCollection service, IConfiguration configuration)
     {
+        service.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+        });
+
         service.AddIdentity<AppUser, IdentityRole>()
             .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<AppDbContext>();

@@ -39,14 +39,14 @@ public class RoomService : IRoomService
     {
         Room room = _mapper.Map<Room>(addRoomDTO);
         
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
 
-        room.CreatedBy = user;
+        //room.CreatedBy = user;
         room.CreatedAt = DateTime.Now;
         room.RoomImageURL = await _fileUploadService.SaveFileAsync(addRoomDTO.Image, _env.WebRootPath, new[] { ".jpg", ".jpeg", ".webp", ".png" });
 
@@ -95,12 +95,12 @@ public class RoomService : IRoomService
     {
         Room room = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (room is null)
         {
             throw new BaseException("Couldn't find room.");
@@ -126,12 +126,12 @@ public class RoomService : IRoomService
     {
         Room room = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (room is null)
         {
             throw new BaseException("Couldn't find room.");
@@ -142,7 +142,7 @@ public class RoomService : IRoomService
         }
 
         room.IsDeleted = true;
-        room.DeletedBy = user;
+        //room.DeletedBy = user;
         room.DeletedAt = DateTime.Now;
 
         _writeRepository.Update(room);
@@ -152,12 +152,12 @@ public class RoomService : IRoomService
     {
         Room room = await _readRepository.GetByIdAsync(Id);
 
-        AppUser user = await _authService.GetCurrentUserAsync();
+        //AppUser user = await _authService.GetCurrentUserAsync();
 
-        if (user is null)
-        {
-            throw new BaseException("Please login.");
-        }
+        //if (user is null)
+        //{
+        //    throw new BaseException("Please login.");
+        //}
         if (room is null)
         {
             throw new BaseException("Couldn't find room.");
@@ -170,10 +170,10 @@ public class RoomService : IRoomService
         Room updatedRoom = _mapper.Map<Room>(updateRoomDTO);
 
         updatedRoom.Id = Id;
-        updatedRoom.CreatedBy = room.CreatedBy;
+        //updatedRoom.CreatedBy = room.CreatedBy;
         updatedRoom.CreatedAt = room.CreatedAt;
         updatedRoom.UpdatedAt = DateTime.Now;
-        updatedRoom.UpdatedBy = user;
+        //updatedRoom.UpdatedBy = user;
         updatedRoom.RoomImageURL = await _fileUploadService.SaveFileAsync(updateRoomDTO.Image, _env.WebRootPath, new[] { ".jpg", ".jpeg", ".webp", ".png" });
 
         _writeRepository.Update(updatedRoom);
